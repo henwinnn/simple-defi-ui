@@ -18,6 +18,7 @@ import { CONTRACTS, SIMPLE_DEX_ABI } from "../constants";
 
 import { formatNumber, formatTime } from "../utils/formatters";
 import type { PriceData } from "../types/defi";
+import { usePriceChart } from "../hooks/usePriceChart";
 
 interface CustomTooltipProps {
   active?: boolean;
@@ -55,7 +56,8 @@ const PriceChart = () => {
 
   const publicClient = usePublicClient();
 
-  console.log("priceHistory");
+  const dataChart = usePriceChart();
+
   // Calculate real price from pool reserves
   const calculateRealPrice = (reserveA: bigint, reserveB: bigint) => {
     if (reserveA === BigInt(0) || reserveB === BigInt(0)) {
@@ -485,40 +487,6 @@ const PriceChart = () => {
     currentRealPrice
   );
 
-  console.log("priceHistory", priceHistory);
-
-  const data = [
-    {
-      timestamp: 1750576980785,
-      price: 0.5,
-      volume24h: 0,
-      tvl: 3449.758518,
-    },
-    {
-      timestamp: 1450576980785,
-      price: 1.4869648784482759,
-      volume24h: 0,
-      tvl: 3449.758518,
-    },
-    {
-      timestamp: 1950576980785,
-      price: 1.4869648784482759,
-      volume24h: 0,
-      tvl: 3449.758518,
-    },
-    {
-      timestamp: 1250576980785,
-      price: 1.4869648784482759,
-      volume24h: 0,
-      tvl: 3449.758518,
-    },
-    {
-      timestamp: 1050576980785,
-      price: 1.4869648784482759,
-      volume24h: 0,
-      tvl: 3449.758518,
-    },
-  ];
   return (
     <div className="w-full max-w-7xl mx-auto px-4 sm:px-0">
       <div className="glass rounded-2xl p-4 sm:p-6 lg:p-8 border border-white/10 shadow-2xl">
@@ -612,7 +580,7 @@ const PriceChart = () => {
           ) : (
             <ResponsiveContainer width="100%" height="100%">
               <LineChart
-                data={data}
+                data={dataChart.data?.items}
                 margin={{ top: 5, right: 5, left: 5, bottom: 5 }}
               >
                 <CartesianGrid
